@@ -7,7 +7,8 @@ const elasticsearch = axios.create({
     },
 });
 
-export const getIndexData = async (index, query = {}) => {
+export const getIndexData = async (index, query) => {
+    console.log("getIndexData", index, query);
     try {
         const response = await elasticsearch.post(`/${index}/_search`, query);
         return response.data;
@@ -46,8 +47,8 @@ export const deleteIndexData = async (index, ids) => {
             }
         }
     }
-    console.log(index, q)
     try {
+        console.log(index)
         const response = await elasticsearch.post(`/${index}/_delete_by_query`, q);
         return response.data;
     } catch (error) {
@@ -55,6 +56,12 @@ export const deleteIndexData = async (index, ids) => {
         throw error;
     }
 };
+export const updateIndexData = async (index, id, doc) => {
+    console.log(doc)
+    // console.log({"doc": {doc}})
+    return await elasticsearch.post(`/${index}/_update/${id}`, JSON.stringify({doc}))
+};
+
 
 export const createIndex = async ({indexName, shards, replicas}) => {
     try {
@@ -63,6 +70,25 @@ export const createIndex = async ({indexName, shards, replicas}) => {
                 number_of_shards: shards,
                 number_of_replicas: replicas,
             },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error querying Elasticsearch:", error);
+        throw error;
+    }
+};
+export const searchIndexData = async (index, query) => {
+    const q = {
+        "query": {
+            "multi_match": {
+                query,
+                "fields": ["*"],
+            }
+        }
+    }
+    try {
+        const response = await elasticsearch.post(`/${index}/_search`, {
+            q
         });
         return response.data;
     } catch (error) {
