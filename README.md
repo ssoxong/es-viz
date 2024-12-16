@@ -1,70 +1,57 @@
-# Getting Started with Create React App
+# ElasticSearch에 프론트엔드 연동
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## INDEX TABLE 페이지
 
-## Available Scripts
+![image 3](https://github.com/user-attachments/assets/bd1012a1-b6ad-495d-946f-72fe1d3a19c4)
 
-In the project directory, you can run:
 
-### `npm start`
+- INDEX TABLE (인덱스 숫자)를 통해 인덱스 수 한 눈에 확인 가능
+- 인덱스별 status, doc count, size 확인 가능
+- 왼쪽 check형태의 버튼과 하단의 Delete 버튼을 통해 여러 인덱스 삭제 가능
+![image 4](https://github.com/user-attachments/assets/c3970aea-eadb-40e3-be31-6686d6ea810a)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- NEW INDEX 버튼을 누르면 인덱스를 추가할 수 있는 모달 팝업
+- 인덱스 이름과 샤드, 복제 수를 지정할 수 있고 샤드와 복제 수의 기본 값은 1
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## INDEX 내의 도큐먼트 페이지
 
-### `npm test`
+![image 5](https://github.com/user-attachments/assets/c39421e1-0866-4f8f-905a-f36a761be468)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Index Table에서 특정 인덱스(goods)를 클릭하면 인덱스 안의 도큐먼트에 대한 정보 출력
+- 왼쪽 check형태의 버튼과 하단의 Delete 버튼을 통해 여러 도큐먼트 삭제 가능
+- index pattern, search 기능을 통해 Elasticvue와 동일한 형태로 쿼리 가능
 
-### `npm run build`
+![image 6](https://github.com/user-attachments/assets/b4129347-b64e-4dc9-8b48-d5d5d12b2617)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Actions-Edit을 통해 도큐먼트를 수정할 수 있는 모달 팝업
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+![image 7](https://github.com/user-attachments/assets/7684a54a-48ef-475d-bfa7-a11b607ce884)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- ADD DOCUMENT 버튼으로 데이터 삽입
+    
+    이미 존재하는 칼럼 기반으로 삽입하는 것이 아닌 key-value 형태로 삽입할 수 있게 하였다.
+    
 
-### `npm run eject`
+## 검색 기능
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+INDEX 내의 도큐먼트 페이지에서 elasticsearch처럼 검색할 수 있는 기능을 구현하였다.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+기본값은 index와 *로, 특정 index의 전체 데이터(*)를 출력한다.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 필드 검색
+![image 8](https://github.com/user-attachments/assets/66ff0354-6d62-4a57-9e44-16e2f1a99820)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+price 필드의 비교연산을 통해 조건에 부합하는 도큐먼트만 출력된다.
+![image 9](https://github.com/user-attachments/assets/1fe9c193-10c0-4f1d-8ac6-d8bb00e528b9)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+와일드카드를 사용하여 검색할 수 있다.
 
-### Code Splitting
+### 인덱스 패턴 검색
+![image 10](https://github.com/user-attachments/assets/e9ea05e3-3f90-4d26-a3cc-6ce5c5a904e6)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
+index pattern을 사용하여 여러 인덱스를 한꺼번에 검색할 수 있다.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+`p*` index pattern을 사용했기 때문에 phones, products 인덱스의 도큐먼트 중 price 조건에 맞는 도큐먼트들이 출력된다.
