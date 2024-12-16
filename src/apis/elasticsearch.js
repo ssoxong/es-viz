@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const elasticsearch = axios.create({
-    baseURL: "http://localhost:9200",
+    baseURL: process.env.VERCEL_BASE_LOCAL,
     headers: {
         "Content-Type": "application/json",
     },
