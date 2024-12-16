@@ -39,10 +39,11 @@ INDEX 내의 도큐먼트 페이지에서 elasticsearch처럼 검색할 수 있�
 기본값은 index와 *로, 특정 index의 전체 데이터(*)를 출력한다.
 
 ### 필드 검색
+
 ![image 8](https://github.com/user-attachments/assets/66ff0354-6d62-4a57-9e44-16e2f1a99820)
 
-
 price 필드의 비교연산을 통해 조건에 부합하는 도큐먼트만 출력된다.
+
 ![image 9](https://github.com/user-attachments/assets/1fe9c193-10c0-4f1d-8ac6-d8bb00e528b9)
 
 
