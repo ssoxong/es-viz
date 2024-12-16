@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const elasticsearch = axios.create({
-    baseURL: process.env.VERCEL_BASE_LOCAL,
+    baseURL: process.env.REACT_APP_API_ENDPOINT,
     headers: {
         "Content-Type": "application/json",
     },
