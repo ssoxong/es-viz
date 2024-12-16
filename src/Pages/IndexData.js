@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Button, Form, Input, message, Table} from "antd";
 import {deleteIndexData, getIndexData} from "../apis/elasticsearch";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import styled from "styled-components";
 import UpdateModal from "../Components/UpdateModal";
 import NewIndexDataModal from "../Components/NewIndexDataModal";
@@ -139,7 +139,9 @@ const IndexData = () => {
 
     return (
         <div style={{padding: "20px"}}>
-            <h1>INDEX: {detailIndex.index}</h1>
+            <Link to={"/"} style={{textDecoration: 'none', color: 'inherit'}}>
+                <h1>INDEX: {detailIndex.index} ({data.length === 0 ? 0 : data.length})</h1>
+            </Link>
             {loading && <p>Loading data...</p>}
             {error && <p>Error: {error}</p>}
             <SearchContainer>
