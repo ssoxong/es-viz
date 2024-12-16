@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const elasticsearch = axios.create({
-    baseURL: "http://localhost:9200",
+    baseURL: "http://localhost:8000",
     headers: {
         "Content-Type": "application/json",
     },
@@ -10,89 +10,80 @@ const elasticsearch = axios.create({
 export const getIndexData = async (index, query) => {
     console.log("getIndexData", index, query);
     try {
-        const response = await elasticsearch.post(`/${index}/_search`, query);
+        const response = await elasticsearch.post(`/index/${index}/search`, query);
         return response.data;
     } catch (error) {
-        console.error("Error querying Elasticsearch:", error);
+        console.error("Error querying index:", error);
         throw error;
     }
 };
 
-export const getIndex = async (query = {}) => {
+export const createIndexData = async (indexName, {id, body}) => {
     try {
-        const response = await elasticsearch.get(`_cat/indices?v&h=index,status,docs.count,store.size&format=json`, query);
-        return response.data.filter((index) => !index.index.startsWith("."));
+        const response = await elasticsearch.post(`/index/${indexName}/document`, {
+            id,
+            body: JSON.stringify(body)
+        });
+        return response.data;
     } catch (error) {
-        console.error("Error querying Elasticsearch:", error);
+        console.error("Error creating document:", error);
+        throw error;
+    }
+};
+
+export const getIndex = async () => {
+    try {
+        const response = await elasticsearch.get("/indices");
+        return response.data;
+    } catch (error) {
+        console.error("Error querying indices:", error);
         throw error;
     }
 };
 
 export const deleteIndex = async (indexlist) => {
-    const index = indexlist.join(',')
     try {
-        const response = await elasticsearch.delete(`/${index}`,);
-        return response.data;
+        const promises = indexlist.map(index =>
+            elasticsearch.delete(`/index/${index}`)
+        );
+        const responses = await Promise.all(promises);
+        return responses.map(response => response.data);
     } catch (error) {
-        console.error("Error querying Elasticsearch:", error);
+        console.error("Error deleting indices:", error);
         throw error;
     }
 };
 
 export const deleteIndexData = async (index, ids) => {
-    const q = {
-        "query": {
-            "terms": {
-                "_id": ids
-            }
-        }
-    }
     try {
-        console.log(index)
-        const response = await elasticsearch.post(`/${index}/_delete_by_query`, q);
+        const response = await elasticsearch.post(`/index/${index}/delete`, ids);
         return response.data;
     } catch (error) {
-        console.error("Error querying Elasticsearch:", error);
+        console.error("Error deleting index data:", error);
         throw error;
     }
 };
-export const updateIndexData = async (index, id, doc) => {
-    console.log(doc)
-    // console.log({"doc": {doc}})
-    return await elasticsearch.post(`/${index}/_update/${id}`, JSON.stringify({doc}))
-};
 
+export const updateIndexData = async (index, id, doc) => {
+    try {
+        const response = await elasticsearch.post(`/index/${index}/update/${id}`, doc);
+        return response.data;
+    } catch (error) {
+        console.error("Error updating index data:", error);
+        throw error;
+    }
+};
 
 export const createIndex = async ({indexName, shards, replicas}) => {
     try {
-        const response = await elasticsearch.put(`/${indexName}`, {
-            settings: {
-                number_of_shards: shards,
-                number_of_replicas: replicas,
-            },
+        const response = await elasticsearch.post("/index", {
+            indexName,
+            shards,
+            replicas,
         });
         return response.data;
     } catch (error) {
-        console.error("Error querying Elasticsearch:", error);
-        throw error;
-    }
-};
-export const searchIndexData = async (index, query) => {
-    const q = {
-        "query": {
-            "multi_match": {
-                query,
-                "fields": ["*"],
-            }
-        }
-    }
-    try {
-        const response = await elasticsearch.post(`/${index}/_search`, {
-            q
-        });
-        return response.data;
-    } catch (error) {
-        console.error("Error querying Elasticsearch:", error);
+        console.error("Error creating index:", error);
         throw error;
     }
 };

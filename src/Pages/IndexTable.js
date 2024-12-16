@@ -65,22 +65,10 @@ const IndexTable = () => {
 
     return (
         <div style={{padding: "20px"}}>
-            <h1>IndexTable</h1>
+            <h1>INDEX TABLE ({data.length === 0 ? 0 : data.length})</h1>
             {loading && <p>Loading data...</p>}
             {error && <p>Error: {error}</p>}
-            <ButtonContainer>
-                <NewIndexModal onIndexCreated={fetchData}/>
 
-                <Button
-                    onClick={handleDeleteSelected}
-                    type="primary"
-                    danger
-                    disabled={selectedRowKeys.length === 0} // 선택된 행 없으면 비활성화
-                    style={{marginBottom: "10px"}}
-                >
-                    Delete
-                </Button>
-            </ButtonContainer>
 
             {!loading && !error && data.length > 0 && (
                 <Table
@@ -96,12 +84,26 @@ const IndexTable = () => {
                     })}
                 />
             )}
+            <ButtonContainer>
+                <NewIndexModal onIndexCreated={fetchData}/>
+
+                <Button
+                    onClick={handleDeleteSelected}
+                    type="primary"
+                    danger
+                    disabled={selectedRowKeys.length === 0} // 선택된 행 없으면 비활성화
+                    style={{marginBottom: "10px"}}
+                >
+                    Delete
+                </Button>
+
+            </ButtonContainer>
         </div>
     );
 };
 
 export default IndexTable;
-const ButtonContainer = styled.div`
+export const ButtonContainer = styled.div`
     display: flex;
     gap: 10px;
     //align-items: center;

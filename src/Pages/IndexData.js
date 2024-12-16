@@ -4,6 +4,8 @@ import {deleteIndexData, getIndexData} from "../apis/elasticsearch";
 import {useParams} from "react-router-dom";
 import styled from "styled-components";
 import UpdateModal from "../Components/UpdateModal";
+import NewIndexDataModal from "../Components/NewIndexDataModal";
+import {ButtonContainer} from "./IndexTable";
 
 const IndexData = () => {
     const [data, setData] = useState([]);
@@ -56,31 +58,33 @@ const IndexData = () => {
         }
     }
 
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            // Elasticsearch 데이터 가져오기
+
+            const result = await getIndexData(detailIndex.index, {
+                query: {match_all: {}},
+            });
+            setDataAndColumn(result);
+
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+
+        }
+
+    }
+
     useEffect(() => {
         setIndexPattern(detailIndex.index);
     }, []);
 
     useEffect(() => {
-
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                // Elasticsearch 데이터 가져오기
-
-                const result = await getIndexData(detailIndex.index, {
-                    query: {match_all: {}},
-                });
-                setDataAndColumn(result);
-
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchData();
     }, [detailIndex]);
+
     const handleEditRow = (record) => {
         setEditingRow(record);
         setEditModalVisible(true);
@@ -172,15 +176,24 @@ const IndexData = () => {
                 />
             )}
 
-            <Button
-                onClick={handleDeleteSelected}
-                type="primary"
-                danger
-                disabled={selectedRowKeys.length === 0} // 선택된 행 없으면 비활성화
-                style={{marginBottom: "10px"}}
-            >
-                Delete
-            </Button>
+
+            <ButtonContainer>
+                <NewIndexDataModal
+                    indexName={detailIndex.index}
+                    onDocumentCreated={fetchData}
+                />
+
+                <Button
+                    onClick={handleDeleteSelected}
+                    type="primary"
+                    danger
+                    disabled={selectedRowKeys.length === 0} // 선택된 행 없으면 비활성화
+                    style={{marginBottom: "10px"}}
+                >
+                    Delete
+                </Button>
+
+            </ButtonContainer>
 
             <UpdateModal
                 visible={editModalVisible}
